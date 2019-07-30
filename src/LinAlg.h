@@ -7,13 +7,16 @@ struct Vec2f
   Vec2f(float x) : x(x), y(x) {}
   Vec2f(float* ptr) : x(ptr[0]), y(ptr[1]) {}
   Vec2f(float x, float y) : x(x), y(y) {}
-  union {
+  /*union {
     struct {
       float x;
       float y;
     };
     float data[2];
-  };
+  };*/
+  float data[2];
+  float& x = data[0];
+  float& y = data[1];
   float& operator[](unsigned i) { return data[i]; }
   const float& operator[](unsigned i) const { return data[i]; }
 };
@@ -55,6 +58,7 @@ struct BBox3f
     };
     float data[6];
   };
+  float data[6];
 };
 
 struct Mat3f
