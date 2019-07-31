@@ -1,41 +1,50 @@
 #ifndef STORE_VISITOR_H
 #define STORE_VISITOR_H
 #include <vector>
+#include "store.h"
 
+template<typename T> concept bool DATATYPE_FLOATING_Contract = requires
+{
+	std::is_floating_point<T>::value;
+	{ sizeof(T) == 8};
+};
+
+template<typename T> requires
+DATATYPE_FLOATING_Contract<T>
 class StoreVisitor
 {
 public:
-  virtual void init(class Store& store) {}
+  virtual void init(Store::Store<T>& store) {}
 
   virtual bool done() { return true; }
 
-  virtual void beginFile(struct Group* group) {}
+  virtual void beginFile(Store::Group<T>* group) {}
 
   virtual void endFile() {}
 
-  virtual void beginModel(struct Group* group) {}
+  virtual void beginModel(Store::Group<T>* group) {}
 
   virtual void endModel() {};
 
-  virtual void beginGroup(struct Group* group) {}
+  virtual void beginGroup(Store::Group<T>* group) {}
 
-  virtual void doneGroupContents(struct Group* group) {}
+  virtual void doneGroupContents(Store::Group<T>* group) {}
 
   virtual void EndGroup() {}
 
-  virtual void beginChildren(struct Group* container) {}
+  virtual void beginChildren(Store::Group<T>* container) {}
 
   virtual void endChildren() {}
 
-  virtual void beginAttributes(struct Group* container) {}
+  virtual void beginAttributes(Store::Group<T>* container) {}
 
   virtual void attribute(const char* key, const char* val) {}
 
-  virtual void endAttributes(struct Group* container) {}
+  virtual void endAttributes(Store::Group<T>* container) {}
 
-  virtual void beginGeometries(struct Group* container) {}
+  virtual void beginGeometries(Store::Group<T>* container) {}
 
-  virtual void geometry(struct Geometry* geometry) {}
+  virtual void geometry(Store::Geometry<T>* geometry) {}
 
   virtual void endGeometries() {}
 

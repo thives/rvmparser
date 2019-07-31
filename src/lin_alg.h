@@ -1,6 +1,10 @@
 #ifndef LIN_ALG_H
 #define LIN_ALG_H
 
+#include <array>
+#include <limits>
+#include <utility>
+#include <tuple>
 #include <cblas.h>
 
 namespace LinAlg {
@@ -272,6 +276,12 @@ public: // TODO: Move these to separate context.
 		return BBox3f(min(min(min(p[0], p[1]), min(p[2], p[3])), min(min(p[4], p[5]), min(p[6], p[7]))),
 			max(max(max(p[0], p[1]), max(p[2], p[3])), max(max(p[4], p[5]), max(p[6], p[7]))));*/
 	//}
+public:
+	static BBox<D, T> createEmptyBBox()
+	{
+		return BBox<D, T>(Vec<D, T>(std::numeric_limits<T>::max, std::numeric_limits<T>::max, std::numeric_limits<T>::max), 
+			Vec<D, T>(std::numeric_limits<T>::min, std::numeric_limits<T>::min, std::numeric_limits<T>::min));
+	}
 protected:
 	Vec<D, T> m_min;
 	Vec<D, T> m_max;

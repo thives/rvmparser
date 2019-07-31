@@ -3,6 +3,7 @@
 #include "common.h"
 #include "store_visitor.h"
 
+template<typename T>
 class Flatten
 {
 public:
