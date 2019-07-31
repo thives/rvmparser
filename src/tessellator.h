@@ -1,8 +1,9 @@
-#pragma once
+#ifndef TESSELLATOR_H
+#define TESSELLATOR_H
 
-#include "Common.h"
-#include "StoreVisitor.h"
-#include "LinAlg.h"
+#include "common.h"
+#include "store_visitor.h"
+#include "lin_alg.h"
 
 class TriangulationFactory
 {
@@ -118,3 +119,5 @@ protected:
 
   virtual void process(Geometry* geometry) {}
 };
+
+#endif

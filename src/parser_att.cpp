@@ -3,8 +3,8 @@
 #include <cstdlib>
 #include <cassert>
 
-#include "Parser.h"
-#include "Store.h"
+#include "parser.h"
+#include "store.h"
 
 namespace {
 

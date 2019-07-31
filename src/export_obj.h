@@ -1,8 +1,10 @@
-#pragma once
+#ifndef EXPORT_OBJ_H
+#define EXPORT_OBJ_H
+
 #include <cstdio>
 
-#include "Common.h"
-#include "StoreVisitor.h"
+#include "common.h"
+#include "store_sisitor.h"
 
 class ExportObj : public StoreVisitor
 {
@@ -47,3 +49,5 @@ private:
   bool compositeBoundingBoxes = false;
 
 };
+
+#endif

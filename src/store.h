@@ -1,38 +1,63 @@
-#pragma once
+#ifndef STORE_h
+#define STORE_H
+
 #include <cstdint>
-#include "Common.h"
-#include "LinAlg.h"
+#include "common.h"
+#include "lin_alg.h"
+
+namespace Store
+{
+template<typename T> concept bool DATATYPE_FLOATING_Contract = requires
+{
+	std::is_floating_point<T>::value;
+	{ sizeof(T) == 8};
+};
+
+template<typename T> concept bool DATATYPE_INTEGER_Contract = requires
+{
+	std::is_integral<T>::value;
+	{ sizeof(T) == 4};
+};
 
 struct Group;
 struct Geometry;
 
+template<typename T> requires
+DATATYPE_FLOATING_Contract<T>
 struct Contour
 {
-  float* vertices;
-  float* normals;
-  uint32_t vertices_n;
+  T* vertices;
+  T* normals;
+  size_t vertices_n;
 };
 
+template<typename T> requires
+DATATYPE_FLOATING_Contract<T>
 struct Polygon
 {
-  Contour* contours;
-  uint32_t contours_n;
+  Contour<T>* contours;
+  size_t contours_n;
 };
 
+template<typename T, typename I> requires
+DATATYPE_FLOATING_Contract<T> &&
+DATATYPE_INTEGER_Contract<I>
 struct Triangulation {
-  float* vertices = nullptr;
-  float* normals = nullptr;
-  float* texCoords = nullptr;
-  uint32_t* indices = 0;
-  uint32_t vertices_n = 0;
-  uint32_t triangles_n = 0;
-  int32_t id = 0;
-  float error = 0.f;
+  T* vertices = nullptr;
+  T* normals = nullptr;
+  T* texCoords = nullptr;
+  I* indices = 0;
+  size_t vertices_n = 0;
+  size_t triangles_n = 0;
+  I id = {0};
+  T error = {0};
 };
 
+template<typename T> requires
+DATATYPE_FLOATING_Contract<T>
 struct Connection
 {
-  enum struct Flags : uint8_t {
+  enum class Flags : FlagsType {
     None = 0,
     HasCircularSide =     1<<0,
     HasRectangularSide =  1<<1
@@ -41,8 +66,8 @@ struct Connection
   Connection* next = nullptr;
   Geometry* geo[2] = { nullptr, nullptr };
   unsigned offset[2];
-  Vec3f p;
-  Vec3f d;
+  Vec<3, T> p;
+  Vec<3, T> d;
   unsigned temp;
   Flags flags = Flags::None;
 
@@ -307,3 +332,5 @@ private:
   ListHeader<Connection> connections;
   
 };
+}
+#endif

@@ -1,5 +1,6 @@
-#pragma once
-#include "StoreVisitor.h"
+#ifndef DUMP_NAMES_H
+#define DUMP_NAMES_H
+#include "store_visitor.h"
 #include <cstdio>
 
 class DumpNames : public StoreVisitor
@@ -36,3 +37,5 @@ private:
 
   void printGroupTail();
 };
+
+#endif

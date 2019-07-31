@@ -1,7 +1,7 @@
 #include <cassert>
 
-#include "Store.h"
-#include "Flatten.h"
+#include "store.h"
+#include "flatten.h"
 
 
 Flatten::Flatten(Store* srcStore) :

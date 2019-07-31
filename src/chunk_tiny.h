@@ -1,7 +1,8 @@
-#pragma once
+#ifndef CHUNK_TINY_H
+#define CHUNK_TINY_H
 
-#include "Common.h"
-#include "StoreVisitor.h"
+#include "common.h"
+#include "store_visitor.h"
 
 class Flatten;
 
@@ -33,3 +34,5 @@ protected:
 
   unsigned vertexThreshold;
 };
+
+#endif

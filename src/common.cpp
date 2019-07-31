@@ -1,4 +1,4 @@
-#include "Common.h"
+#include "common.h"
 #include <cstdlib>
 #include <algorithm>
 #include <cassert>

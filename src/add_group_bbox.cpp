@@ -1,9 +1,9 @@
 #include <climits>
 #include <algorithm>
 #include <cassert>
-#include "Store.h"
-#include "AddGroupBBox.h"
-#include "LinAlgOps.h"
+#include "store.h"
+#include "add_group_bbox.h"
+#include "lin_alg.h"
 
 void AddGroupBBox::init(class Store& store)
 {

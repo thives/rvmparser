@@ -1,5 +1,5 @@
-#include "Common.h"
-#include "Store.h"
+#include "common.h"
+#include "store.h"
 
 namespace {
 

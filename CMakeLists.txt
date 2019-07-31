@@ -16,6 +16,7 @@ include(FindThreads)
 include(GNUInstallDirs)
 
 find_package(RapidJSON REQUIRED CONFIG)
+find_package(OpenBLAS REQUIRED CONFIG)
 
 #pkg_check_modules(RABBITMQ REQUIRED librabbitmq)
 

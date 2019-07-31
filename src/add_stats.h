@@ -1,5 +1,7 @@
-#pragma once
-#include "StoreVisitor.h"
+#ifndef ADD_STATS_H
+#define ADD_STATS_H
+
+#include "store_visitor.h"
 
 struct Stats
 {
@@ -41,3 +43,5 @@ private:
   struct Stats* stats = nullptr;
 
 };
+
+#endif

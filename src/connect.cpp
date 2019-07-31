@@ -2,9 +2,9 @@
 #include <algorithm>
 #include <cmath>
 #include <chrono>
-#include "Common.h"
-#include "Store.h"
-#include "LinAlgOps.h"
+#include "common.h"
+#include "store.h"
+#include "lin_alg.h"
 
 using std::sin;
 using std::cos;

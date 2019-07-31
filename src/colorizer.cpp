@@ -1,6 +1,6 @@
 #include <cassert>
-#include "Store.h"
-#include "Colorizer.h"
+#include "store.h"
+#include "colorizer.h"
 
 
 Colorizer::Colorizer(Logger logger, const char* colorAttribute) :

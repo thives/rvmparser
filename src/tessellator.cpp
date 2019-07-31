@@ -5,9 +5,9 @@
 #include <cassert>
 #include "tesselator.h"
 
-#include "Store.h"
-#include "Tessellator.h"
-#include "LinAlgOps.h"
+#include "store.h"
+#include "tessellator.h"
+#include "lin_alg.h"
 
 namespace {
 

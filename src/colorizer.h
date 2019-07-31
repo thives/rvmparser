@@ -1,7 +1,8 @@
-#pragma once
+#ifndef COLORIZER_H
+#define COLORIZER_H
 
-#include "Common.h"
-#include "StoreVisitor.h"
+#include "common.h"
+#include "store_visitor.h"
 
 class Colorizer : public StoreVisitor
 {
@@ -38,3 +39,5 @@ private:
   const char* defaultName = nullptr;
   const char* colorAttribute = nullptr;
 };
+
+#endif

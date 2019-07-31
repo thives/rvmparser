@@ -1,21 +1,23 @@
-#pragma once
-#include <cstdint>
+#ifndef COMMON_H
+#define COMMON_H
 
+#include <cstdint>
+/*
 class Store;
 
 struct Triangulation;
+*/
+//typedef void(*Logger)(unsigned level, const char* msg, ...);
 
-typedef void(*Logger)(unsigned level, const char* msg, ...);
+//void* xmalloc(size_t size);
 
-void* xmalloc(size_t size);
+//void* xcalloc(size_t count, size_t size);
 
-void* xcalloc(size_t count, size_t size);
+//void* xrealloc(void* ptr, size_t size);
 
-void* xrealloc(void* ptr, size_t size);
+//uint64_t fnv_1a(const char* bytes, size_t l);
 
-uint64_t fnv_1a(const char* bytes, size_t l);
-
-
+/*
 struct Arena
 {
   Arena() = default;
@@ -24,8 +26,8 @@ struct Arena
 
   ~Arena() { clear(); }
 
-  uint8_t * first = nullptr;
-  uint8_t * curr = nullptr;
+  char8_t * first = nullptr;
+  char8_t * curr = nullptr;
   size_t fill = 0;
   size_t size = 0;
 
@@ -108,3 +110,5 @@ void connect(Store* store, Logger logger);
 void align(Store* store, Logger logger);
 bool exportJson(Store* store, Logger logger, const char* path);
 bool discardGroups(Store* store, Logger logger, const void* ptr, size_t size);
+*/
+#endif

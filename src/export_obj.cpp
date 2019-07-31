@@ -2,9 +2,9 @@
 #include <cstdio>
 #include <string>
 #include <algorithm>
-#include "ExportObj.h"
-#include "Store.h"
-#include "LinAlgOps.h"
+#include "export_obj.h"
+#include "store.h"
+#include "lin_alg.h"
 
 namespace {
 

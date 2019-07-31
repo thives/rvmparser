@@ -8,16 +8,16 @@
 #include <chrono>
 #include <algorithm>
 
-#include "Parser.h"
-#include "Tessellator.h"
-#include "ExportObj.h"
-#include "Store.h"
-#include "Flatten.h"
-#include "AddStats.h"
-#include "DumpNames.h"
-#include "ChunkTiny.h"
-#include "AddGroupBBox.h"
-#include "Colorizer.h"
+#include "parser.h"
+#include "tessellator.h"
+#include "export_obj.h"
+#include "store.h"
+#include "flatten.h"
+#include "add_stats.h"
+#include "dump_names.h"
+#include "chunk_tiny.h"
+#include "add_group_bbox.h"
+#include "colorizer.h"
 
 
 void logger(unsigned level, const char* msg, ...)

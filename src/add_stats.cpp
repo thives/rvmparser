@@ -1,6 +1,6 @@
 #include <cassert>
-#include "Store.h"
-#include "AddStats.h"
+#include "store.h"
+#include "add_stats.h"
 
 void AddStats::init(class Store& store)
 {

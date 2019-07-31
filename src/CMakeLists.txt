@@ -9,7 +9,7 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} 
 	PUBLIC
-		
+		${OPENBLAS_LIBS}
 )
 target_include_directories(${PROJECT_NAME}
 	PUBLIC
@@ -18,7 +18,7 @@ target_include_directories(${PROJECT_NAME}
 target_compile_options(${PROJECT_NAME}
 	PRIVATE
 		-Werror
-		-Wfatal-errors
+#		-Wfatal-errors
 		-fconcepts
 )
 target_compile_features(${PROJECT_NAME}

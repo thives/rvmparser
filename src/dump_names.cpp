@@ -1,7 +1,7 @@
 #include <cassert>
-#include "Common.h"
-#include "DumpNames.h"
-#include "Store.h"
+#include "common.h"
+#include "dump_names.h"
+#include "store.h"
 
 
 void DumpNames::init(class Store& store)

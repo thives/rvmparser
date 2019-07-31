@@ -1,9 +1,7 @@
 #include <algorithm>
 #include <cassert>
-#include "Store.h"
-#include "StoreVisitor.h"
-
-
+#include "store.h"
+#include "store_visitor.h"
 
 namespace {
 

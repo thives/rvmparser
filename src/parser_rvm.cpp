@@ -1,6 +1,6 @@
-#include "Parser.h"
-#include "StoreVisitor.h"
-#include "Store.h"
+#include "parser.h"
+#include "store_visitor.h"
+#include "store.h"
 
 #include <iostream>
 #include <string>
@@ -10,7 +10,7 @@
 
 #include <cassert>
 
-#include "LinAlgOps.h"
+#include "lin_alg.h"
 
 namespace {
 

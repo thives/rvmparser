@@ -1,12 +1,10 @@
-#pragma once
-
 #include <rapidjson/document.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/filewritestream.h>
 
-#include "Store.h"
-#include "LinAlgOps.h"
+#include "store.h"
+#include "lin_alg.h"
 
 
 

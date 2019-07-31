@@ -1,0 +1,17 @@
+#pragma once
+#include <cmath>
+#include <cfloat>
+#include "LinAlg.h"
+
+Mat3f inverse(const Mat3f& M); // TODO
+
+float getScale(const Mat3f& M); // TODO
+
+inline float getScale(const Mat3x4f& M) { return getScale(Mat3f(M.data)); } // TODO
+
+inline BBox3f createEmptyBBox3f() // TODO
+{
+  return BBox3f(Vec3f(FLT_MAX, FLT_MAX, FLT_MAX), Vec3f(-FLT_MAX, -FLT_MAX, -FLT_MAX));
+}
+
+BBox3f transform(const Mat3x4f& M, const BBox3f& bbox); // TODO

@@ -1,7 +1,7 @@
 #include <cassert>
-#include "Store.h"
-#include "Flatten.h"
-#include "ChunkTiny.h"
+#include "store.h"
+#include "flatten.h"
+#include "chunk_tiny.h"
 
 ChunkTiny::ChunkTiny(Flatten& flatten, unsigned vertexThreshold) : flatten(flatten), vertexThreshold(vertexThreshold)
 {

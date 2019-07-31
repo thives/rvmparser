@@ -1,7 +1,7 @@
 #include <cassert>
 #include <chrono>
-#include "Store.h"
-#include "LinAlgOps.h"
+#include "store.h"
+#include "lin_alg.h"
 
 namespace {
 

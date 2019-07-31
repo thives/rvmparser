@@ -1,7 +1,8 @@
-#pragma once
+#ifndef ADD_GROUP_BBOX_H
+#define ADD_GROUP_BBOX_H
 
-#include "Common.h"
-#include "StoreVisitor.h"
+#include "common.h"
+#include "store_visitor.h"
 
 class AddGroupBBox : public StoreVisitor
 {
@@ -22,3 +23,5 @@ protected:
   unsigned stack_p = 0;
 
 };
+
+#endif

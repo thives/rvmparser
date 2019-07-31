@@ -1,4 +1,5 @@
-#pragma once
+#ifndef STORE_VISITOR_H
+#define STORE_VISITOR_H
 #include <vector>
 
 class StoreVisitor
@@ -39,3 +40,5 @@ public:
   virtual void endGeometries() {}
 
 };
+
+#endif
