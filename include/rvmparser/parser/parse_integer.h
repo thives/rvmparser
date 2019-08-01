@@ -28,13 +28,18 @@ public:
 		typename std::conditional<(N <= sizeof(unsigned)), unsigned,
 		typename std::conditional<(N <= sizeof(unsigned long)), unsigned long, unsigned long long>::type>::type>::type>::type;
 	ParseInteger(const unsigned char* data) : m_data(data), m_value(0), m_executed(false) {}
-	value_type value() const
+	value_type value()
 	{
 		return m_executed ? m_value : execute();
 	}
+	void operator()(const unsigned char* data)
+	{
+		m_data = data;
+		m_executed = false;
+	}
 protected:
 	const unsigned char* m_data;
-	mutable value_type m_value;
+	value_type m_value;
 	bool m_executed;
 	value_type execute()
 	{
