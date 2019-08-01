@@ -18,9 +18,9 @@ template<typename T> concept bool DATATYPE_FLOATING_Contract = requires
 	std::is_floating_point<T>::value;
 };
 
-template<size_t D> concept bool DIMENSION_Contract = requires(size_t d) 
+template<size_t D> concept bool DIMENSION_Contract = requires
 {
-	{ d > 0 };
+	requires D > 0;
 };
 
 template<size_t M, size_t N, typename T> requires
