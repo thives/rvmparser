@@ -9,6 +9,8 @@ namespace RvmParser
 {
 namespace Parser
 {
+namespace Basic
+{
 // Role contract definitions and other constraints.
 template<size_t N> concept bool PARSE_INTEGER_SIZE_Contract = requires
 {
@@ -32,6 +34,13 @@ public:
 	{
 		return m_executed ? m_value : execute();
 	}
+	unsigned char* next()
+	{
+		if (!m_executed) {
+			execute();
+		}
+		return m_next;
+	}
 	void operator()(const unsigned char* data)
 	{
 		m_data = data;
@@ -39,6 +48,7 @@ public:
 	}
 protected:
 	const unsigned char* m_data;
+	unsigned char* m_next;
 	value_type m_value;
 	bool m_executed;
 	value_type execute()
@@ -47,9 +57,11 @@ protected:
 			m_value = ((m_data[(sizeof...(I)-I-1)] << (8*I)) | ...);
 		}, std::make_index_sequence<N>{});
 		m_executed = true;
+		m_next = m_data+N;
 		return m_value;
 	}
 };
+}
 }
 }
 

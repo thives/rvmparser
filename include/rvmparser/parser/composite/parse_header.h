@@ -1,80 +1,90 @@
 #ifndef RVMPARSER_PARSER_PARSE_HEADER_H
 #define RVMPARSER_PARSER_PARSE_HEADER_H
 
+#include <memory>
 #include <cstring>
+#include "parser/_parser_role.h"
 
 namespace RvmParser
 {
 namespace Parser
 {
+namespace Composite
+{
+// Role contract definitions and other constraints.
 template<typename STRING> concept bool STRING_Contract = requires(size_t i, const char* c)
 {
 	{ STRING(c, i) };
 };
 
 template<typename HEADER, typename STRING> concept bool HEADER_Contract = requires(
-	H h,
+	HEADER header,
 	STRING&& name,
 	unsigned version,
 	size_t size)
 {
 	require STRING_Contract<STRING>;
-	{ h.name() } -> const STRING&;
-	{ h.version() } -> unsigned;
-	{ h.size() } -> size_t; // Chunk size in bytes.
+	{ header.name() } -> const STRING&;
+	{ header.version() } -> unsigned;
+	{ header.size() } -> size_t; // Chunk size in bytes.
 	{ HEADER(name, version, size) };
 };
 
-template<typename INTEGER_PARSER, size_t N> concept bool INTEGER_PARSER_Contract = requires(INTEGER_PARSER<N> p, const char* data)
+template<typename INTEGER_PARSER, size_t N> concept bool INTEGER_PARSER_Contract = requires
 {
-	require N == 4;
-	{ p.value() } -> INTEGER_PARSER<N>::value_type;
-	{ p(data) };
-	{ P(data) };
+	requires PARSER_Contract<INTEGER_PARSER<N>>;
+	requires N == 4;
 };
 
-template<typename STRING_PARSER, size_t N> concept bool STRING_PARSER_Contract = requires(STRING_PARSER p)
-{
-	{ p.value() } -> const STRING&;
-	{ p(data) };
-	{ P(data) };
-};
-
-template<typename HEADER, typename STRING, typename INTEGER_PARSER, typename STRING_PARSER> requires
+// Context definition.
+template<typename HEADER, typename STRING, typename INTEGER_PARSER> requires
 HEADER_Contract<HEADER, STRING> &&
-INTEGER_PARSER_Contract<INTEGER_PARSER, 4> &&
-STRING_PARSER_Contract<STRING_PARSER>
+INTEGER_PARSER_Contract<INTEGER_PARSER, characterElementSize>
 class ParseHeader
 {
 public:
 	using value_type = HEADER;
 	constexpr size_t nNameElements = 4;
-	ParseHeader(const unsigned char* data, INTEGER_PARSER<4>* integerParser, STRING_PARSER* stringParser) : m_integerParser(integerParser), m_stringParser(stringParser), m_data(data), m_executed(false) {}
+	constexpr size_t characterElementSize = 4;
+	ParseHeader(const unsigned char* data, INTEGER_PARSER<characterElementSize>* integerParser) : 
+		m_integerParser(integerParser), 
+		m_data(data),
+		m_next(nullptr), 
+		m_executed(false) {}
 	std::unique_ptr<value_type>& value_type& value()
 	{
 		return m_executed ? m_value : execute();
+	}
+	unsigned char* next()
+	{
+		if (!m_executed) {
+			execute();
+		}
+		return m_next;
 	}
 	void operator()(const unsigned char* data)
 	{
 		m_data = data;
 		m_executed = false;
 	}
-protected:
-	INTEGER_PARSER<4>* m_integerParser;
-	STRING_PARSER* m_stringParser;
+protected: // Roles.
+	INTEGER_PARSER<characterElementSize>* m_integerParser;
 protected:
 	const unsigned char* m_data;
+	unsigned char* m_next;
 	std::unique_ptr<value_type> m_value;
 	bool m_executed;
 	const value_type& execute()
 	{
+		unsigned char* data = m_data;
 		char name[nNameElements];
 		unsigned version;
 		size_t size;
 		std::array<unsigned, nNameElements> nameData;
 		std::invoke([this, nameData]<size_t ... I>(std::index_sequence<I...>) {
-			((nameData[I] = m_integerParser(m_data+4*I).value()), ...);
+			((nameData[I] = m_integerParser(data+characterElementSize*I).value()), ...);
 		}, std::make_index_sequence<nNameElements>{});
+		data = m_integerParser->next();
 		if (std::apply([nameData]<size_t ... I>(std::index_sequence<I...>) {
 			return ((nameData[I] <= 0xff) && ...);
 		}, std::make_index_sequence<nNameElements>{})) {
@@ -83,13 +93,16 @@ protected:
 		std::invoke([nameData, name]<size_t ... I>(std::index_sequence<I...>) {
 			((name[I] = static_cast<char>(nameData[I])), ...);
 		};
-		size = (*m_integerParser)(m_data+4*nNameElements).value();
-		version = (*m_integerParser)(m_data+4*nNameElements+4+4).value(); // Skip unknown variable.
+		size = (*m_integerParser)(data).value();
+		data = m_integerParser->next();
+		version = (*m_integerParser)(data+4).value(); // Skip unknown variable.
 		m_value = std::make_unique<value_type>(name, version, size);
 		m_executed = true;
+		m_next = m_integerParser->next();
 		return m_value;
 	}
 };
+}
 }
 }
 

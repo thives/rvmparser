@@ -1,11 +1,14 @@
 #ifndef RVMPARSER_PARSER_PARSE_FLOATING_H
 #define RVMPARSER_PARSER_PARSE_FLOATING_H
 
-#include <memory>
+#include <type_traits>
+#include "parser/_parser_role.h"
 
 namespace RvmParser
 {
 namespace Parser
+{
+namespace Basic
 {
 // Role contract definitions and other constraints.
 template<size_t N> concept bool PARSE_FLOATING_SIZE_Contract = requires
@@ -14,11 +17,9 @@ template<size_t N> concept bool PARSE_FLOATING_SIZE_Contract = requires
 	requires N > 0;
 };
 
-template<typename INTEGER_PARSER, size_t N> concept bool INTEGER_PARSER_Contract = requires(INTEGER_PARSER<N> p, const unsigned char* data)
+template<typename INTEGER_PARSER, size_t N> concept bool INTEGER_PARSER_Contract = requires
 {
-	{ p.value() } -> INTEGER_PARSER<N>::value_type;
-	{ p(data) };
-	{ P(data) };
+	requires PARSER_Contract<INTEGER_PARSER<N>>;
 };
 
 // Context definition.
@@ -32,10 +33,21 @@ public:
 		typename std::conditional<(N == sizeof(float)), float, 
 		typename std::conditional<(N == sizeof(double)), double, long double>::type>::type;
 	ParseFloating(const unsigned char* data, INTEGER_PARSER* integerParser) : 
-		m_integerParser(integerParser), m_data(data), m_value(0), m_executed(false) {}
+		m_integerParser(integerParser), 
+		m_data(data), 
+		m_next(nullptr),
+		m_value(0), 
+		m_executed(false) {}
 	value_type value()
 	{
 		return m_executed ? m_value : execute();
+	}
+	unsigned char* next()
+	{
+		if (!m_executed) {
+			execute();
+		}
+		return m_next;
 	}
 	void operator()(const unsigned char* data)
 	{
@@ -46,6 +58,7 @@ protected: // Roles.
 	INTEGER_PARSER* m_integerParser;
 protected:
 	const unsigned char* m_data;
+	unsigned char* m_next;
 	value_type m_value;
 	bool m_executed;
 	value_type execute()
@@ -53,9 +66,11 @@ protected:
 		typename INTEGER_PARSER<N>::value_type bytes = (*m_integerParser)(m_data)->value();
 		m_value = *reinterpret_cast<value_type*>(&bytes);
 		m_executed = true;
+		m_next = m_integerParser->next();
 		return m_value;
 	}
 };
+}
 }
 }
 
