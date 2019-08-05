@@ -1,6 +1,7 @@
 #ifndef RVMPARSER_PARSER_PARSE_STRING_H
 #define RVMPARSER_PARSER_PARSE_STRING_H
 
+#include <algorithm>
 #include "parser/_parser_role.h"
 
 namespace RvmParser
@@ -10,7 +11,7 @@ namespace Parser
 namespace Basic
 {
 // Role contract definitions and other constraints.
-template<typename INTEGER_PARSER, size_t N> concept bool INTEGER_PARSER_Contract = requires
+template<template<size_t> typename INTEGER_PARSER, size_t N> concept bool INTEGER_PARSER_Contract = requires
 {
 	requires PARSER_Contract<INTEGER_PARSER<N>>;
 	requires N == 4;
@@ -23,7 +24,7 @@ template<typename STRING> concept bool STRING_Contract = requires(STRING s, size
 };
 
 // Context definition.
-template<typename STRING, typename INTEGER_PARSER, size_t N> requires
+template<typename STRING, template<size_t> typename INTEGER_PARSER, size_t N> requires
 STRING_Contract<STRING> &&
 INTEGER_PARSER_Contract<INTEGER_PARSER, N>
 class ParseString
@@ -39,33 +40,35 @@ public:
 	{
 		return m_executed ? m_value : execute();
 	}
-	unsigned char* next()
+	const unsigned char* next()
 	{
 		if (!m_executed) {
 			execute();
 		}
 		return m_next;
 	}
-	void operator()(const unsigned char* data)
+	ParseString<STRING, INTEGER_PARSER, N>& operator()(const unsigned char* data)
 	{
 		m_data = data;
 		m_executed = false;
+		return *this;
 	}
 protected: // Roles.
 	INTEGER_PARSER<N>* m_integerParser;
 protected:
 	const unsigned char* m_data;
-	unsigned char* m_next;
+	const unsigned char* m_next;
 	value_type m_value;
 	bool m_executed;
 	const value_type& execute()
 	{
-		unsigned char* data = m_data;
+		const unsigned char* data = m_data;
 		size_t length = 4*(*m_integerParser)(data).value(); // The format specifies length as number of 32 bit chunks.
 		data = m_integerParser->next();
 		m_value = value_type(reinterpret_cast<const char*>(data), length);
+		m_value.erase(std::find(m_value.begin(), m_value.end(), '\0'), m_value.end()); // Remove trailing nulls.
 		m_executed = true;
-		m_next = data + length;
+		m_next = m_data + length + 4;
 		return m_value;
 	}
 };

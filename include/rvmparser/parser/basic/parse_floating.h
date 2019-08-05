@@ -17,13 +17,13 @@ template<size_t N> concept bool PARSE_FLOATING_SIZE_Contract = requires
 	requires N > 0;
 };
 
-template<typename INTEGER_PARSER, size_t N> concept bool INTEGER_PARSER_Contract = requires
+template<template<size_t> typename INTEGER_PARSER, size_t N> concept bool INTEGER_PARSER_Contract = requires
 {
 	requires PARSER_Contract<INTEGER_PARSER<N>>;
 };
 
 // Context definition.
-template<size_t N, typename INTEGER_PARSER> requires
+template<size_t N, template<size_t> typename INTEGER_PARSER> requires
 PARSE_FLOATING_SIZE_Contract<N> &&
 INTEGER_PARSER_Contract<INTEGER_PARSER, N>
 class ParseFloating
@@ -32,7 +32,7 @@ public:
 	using value_type = 
 		typename std::conditional<(N == sizeof(float)), float, 
 		typename std::conditional<(N == sizeof(double)), double, long double>::type>::type;
-	ParseFloating(const unsigned char* data, INTEGER_PARSER* integerParser) : 
+	ParseFloating(const unsigned char* data, INTEGER_PARSER<N>* integerParser) : 
 		m_integerParser(integerParser), 
 		m_data(data), 
 		m_next(nullptr),
@@ -42,28 +42,29 @@ public:
 	{
 		return m_executed ? m_value : execute();
 	}
-	unsigned char* next()
+	const unsigned char* next()
 	{
 		if (!m_executed) {
 			execute();
 		}
 		return m_next;
 	}
-	void operator()(const unsigned char* data)
+	ParseFloating<N, INTEGER_PARSER> operator()(const unsigned char* data)
 	{
 		m_data = data;
 		m_executed = false;
+		return *this;
 	}
 protected: // Roles.
-	INTEGER_PARSER* m_integerParser;
+	INTEGER_PARSER<N>* m_integerParser;
 protected:
 	const unsigned char* m_data;
-	unsigned char* m_next;
+	const unsigned char* m_next;
 	value_type m_value;
 	bool m_executed;
 	value_type execute()
 	{
-		typename INTEGER_PARSER<N>::value_type bytes = (*m_integerParser)(m_data)->value();
+		typename INTEGER_PARSER<N>::value_type bytes = (*m_integerParser)(m_data).value();
 		m_value = *reinterpret_cast<value_type*>(&bytes);
 		m_executed = true;
 		m_next = m_integerParser->next();

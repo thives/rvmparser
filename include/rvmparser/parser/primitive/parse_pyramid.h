@@ -3,6 +3,7 @@
 
 #include "parser/_parser_role.h"
 #include "parser/_primitive_type.h"
+#include "utility.h"
 
 namespace RvmParser
 {
@@ -10,10 +11,9 @@ namespace Parser
 {
 namespace Primitive
 {
-template<typename VECTOR, typename T, size_t D> concept bool VECTOR_Contract = requires(VECTOR<T, D> v)
+template<template<typename,size_t> typename VECTOR, typename T, size_t D> concept bool VECTOR_Contract = requires
 {
-	{ v[0] } -> T&;
-	{ v[D-1] } -> T&;
+	requires IS_NCONSTRUCTIBLE_Contract<VECTOR, T, D>;
 };
 
 template<typename PRIMITIVE> concept bool PRIMITIVE_PYRAMIDE_Contract = requires
@@ -22,25 +22,33 @@ template<typename PRIMITIVE> concept bool PRIMITIVE_PYRAMIDE_Contract = requires
 	requires PRIMITIVE::type == PrimitiveType::Pyramid;
 };
 
-template<typename PYRAMID, typename VECTOR> concept bool PYRAMID_Contract = requires(PYRAMID p)
+template<typename PYRAMID, template<typename,size_t> typename VECTOR, typename T> concept bool PYRAMID_Contract = requires(
+	PYRAMID<VECTOR<T, 2>> p,
+	VECTOR<T, 2>& bottom,
+	VECTOR<T, 2>& top,
+	VECTOR<T, 2>& offset,
+	T height)
 {
-	requires VECTOR_Contract<VECTOR>
-	std::array<T, 2> m_bottom;
-	std::array<T, 2> m_top;
-	std::array<T, 2> m_offset;
-	T m_height;
-	{ p.bottom() } -> VECTOR;
+	requires VECTOR_Contract<VECTOR, T, 2>
+	{ p.bottom() } -> VECTOR<T, 2>&;
+	{ p.top() } -> VECTOR<T, 2>&;
+	{ p.offset() } -> VECTOR<T, 2>&;
+	{ p.height() } -> T&;
+	{ PYRAMID(bottom, top, offset, height) };
 };
 
-template<typename PYRAMID, typename PRIMITIVE> requires
-PYRAMID_Contract<PYRAMID> &&
-PRIMITIVE_Contract<PRIMITIVE>
+template<typename PYRAMID, typename PRIMITIVE, typename T, template<typename,size_t> typename VECTOR, template<size_t,typename> typename FLOATING_PARSER, typename VECTOR_PARSER> requires
+PYRAMID_Contract<PYRAMID, VECTOR, T> &&
+PRIMITIVE_PYRAMIDE_Contract<PRIMITIVE> &&
+PARSER_Contract<FLOATING_PARSER> &&
+PARSER_Contract<VECTOR_PARSER>
 class ParsePyramid
 {
 public:
 	using value_type = PYRAMID;
-	ParsePyramid(const unsigned char* data, FLOATING_PARSER* floatingParser) {}
+	ParsePyramid(const unsigned char* data, FLOATING_PARSER* floatingParser, VECTOR_PARSER* vectorParser) {}
 		m_floatingParser(floatingParser), 
+		m_vectorParser(vectorParser),
 		m_data(data), 
 		m_next(nullptr),
 		m_value(0), 
@@ -63,6 +71,7 @@ public:
 	}
 protected:
 	FLOATING_PARSER* m_floatingParser;
+	VECTOR_PARSER* m_vectorParser;
 protected:
 	const unsigned char* m_data;
 	unsigned char* m_next;

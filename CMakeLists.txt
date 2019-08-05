@@ -20,5 +20,5 @@ find_package(OpenBLAS REQUIRED CONFIG)
 
 #pkg_check_modules(RABBITMQ REQUIRED librabbitmq)
 
-#add_subdirectory(tests)
-add_subdirectory(src)
+add_subdirectory(tests)
+#add_subdirectory(src)

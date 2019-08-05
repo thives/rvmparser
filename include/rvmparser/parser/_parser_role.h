@@ -9,8 +9,8 @@ template<typename PARSER> concept bool PARSER_Contract = requires(PARSER p, cons
 {
 	{ p.value() } -> PARSER::value_type;
 	{ p.next() } -> const unsigned char*;
-	{ p(data) };
-	{ P(data) };
+	{ p(data) } -> PARSER&;
+	{ PARSER(data) };
 };
 }
 }

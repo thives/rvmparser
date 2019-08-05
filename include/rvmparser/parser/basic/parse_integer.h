@@ -29,26 +29,27 @@ public:
 		typename std::conditional<(N <= sizeof(unsigned short)), unsigned short,
 		typename std::conditional<(N <= sizeof(unsigned)), unsigned,
 		typename std::conditional<(N <= sizeof(unsigned long)), unsigned long, unsigned long long>::type>::type>::type>::type;
-	ParseInteger(const unsigned char* data) : m_data(data), m_value(0), m_executed(false) {}
+	ParseInteger(const unsigned char* data = nullptr) : m_data(data), m_value(0), m_executed(false) {}
 	value_type value()
 	{
 		return m_executed ? m_value : execute();
 	}
-	unsigned char* next()
+	const unsigned char* next()
 	{
 		if (!m_executed) {
 			execute();
 		}
 		return m_next;
 	}
-	void operator()(const unsigned char* data)
+	ParseInteger<N>& operator()(const unsigned char* data)
 	{
 		m_data = data;
 		m_executed = false;
+		return *this;
 	}
 protected:
 	const unsigned char* m_data;
-	unsigned char* m_next;
+	const unsigned char* m_next;
 	value_type m_value;
 	bool m_executed;
 	value_type execute()

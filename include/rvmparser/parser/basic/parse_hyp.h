@@ -1,5 +1,5 @@
-#ifndef RVMPARSER_PARSER_BASIC_PARSE_ARRAY_H
-#define RVMPARSER_PARSER_BASIC_PARSE_ARRAY_H
+#ifndef RVMPARSER_PARSER_BASIC_PARSE_HYP_H
+#define RVMPARSER_PARSER_BASIC_PARSE_HYP_H
 
 #include "parser/_parser_role.h"
 
@@ -9,13 +9,13 @@ namespace Parser
 {
 namespace Basic
 {
-template<typename ARRAY, typename T, size_t N, typename PARSER> requires
-PARSER_Contract<PARSER<T>>
+template<template<typename, size_t...> typename HYP, typename T, size_t ... D, typename PARSER, size_t N> requires
+PARSER_Contract<PARSER<T, N>>
 class ParseArray
 {
 public:
-	using value_type = ARRAY;
-	ParseArray(const unsigned char* data, PARSER* parser) :
+	using value_type = HYP<T, D...>;
+	ParseArray(const unsigned char* data, PARSER<T, N>* parser) :
 		m_parser(parser),
 		m_data(data),
 		m_next(nullptr),
