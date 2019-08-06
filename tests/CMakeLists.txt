@@ -67,4 +67,26 @@ target_compile_features(${PROJECT_NAME}_parse_string
 add_test(NAME parse_string COMMAND ${PROJECT_NAME}_parse_string WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 
+### Parse Header
+add_executable(${PROJECT_NAME}_parse_header
+	${CMAKE_CURRENT_SOURCE_DIR}/test_parse_header.cpp
+)
+
+target_include_directories(${PROJECT_NAME}_parse_header
+	PUBLIC
+		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/rvmparser/>
+)
+
+target_compile_options(${PROJECT_NAME}_parse_header
+	PRIVATE
+		-Werror
+		-fconcepts
+)
+target_compile_features(${PROJECT_NAME}_parse_header
+	PRIVATE
+		cxx_std_20
+)
+add_test(NAME parse_header COMMAND ${PROJECT_NAME}_parse_header WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
+
 

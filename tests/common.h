@@ -29,6 +29,13 @@ std::string to_string(const T& arg)
 	return std::to_string(arg);
 }
 
+template<typename T> requires
+TOSTRINGMEMBER_Contract<T>
+std::string to_string(const T& arg)
+{
+	return arg.toString();
+}
+
 template<typename Func, typename TExpected>
 void test_assert(Func func, TExpected expected, const std::string& label = ""s)
 {
