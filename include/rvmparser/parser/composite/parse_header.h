@@ -79,23 +79,23 @@ protected:
 		std::array<char, nNameElements> name;
 		unsigned version;
 		size_t size;
-		std::array<unsigned, nNameElements> nameData;
-		std::invoke([this, nameData, data]<size_t ... I>(std::index_sequence<I...>) {
-			(void(nameData[I] = m_integerParser(data+(N*I)).value()), ...);
-		}, std::make_index_sequence<nNameElements>{});
+		std::array<typename INTEGER_PARSER<N>::value_type, nNameElements> nameData;
+		std::invoke([this, data]<size_t ... I>(auto& nameData, std::index_sequence<I...>) {
+			((nameData[I] = (*m_integerParser)(data+(N*I)).value()), ...);
+		}, nameData, std::make_index_sequence<nNameElements>{});
 		data = m_integerParser->next();
 		if (std::invoke([nameData]<size_t ... I>(std::index_sequence<I...>) {
-			return ((nameData[I] <= 0xff) && ...);
+			return ((nameData[I] > 0xff) || ...);
 		}, std::make_index_sequence<nNameElements>{})) {
 			throw std::runtime_error("Error: expected header name, but got something else!");
 		}
-		std::invoke([nameData, name]<size_t ... I>(std::index_sequence<I...>) {
+		std::invoke([nameData]<size_t ... I>(auto& name, std::index_sequence<I...>) {
 			((name[I] = static_cast<char>(nameData[I])), ...);
-		}, std::make_index_sequence<nNameElements>{});
+		}, name, std::make_index_sequence<nNameElements>{});
 		size = (*m_integerParser)(data).value();
 		data = m_integerParser->next();
 		version = (*m_integerParser)(data+4).value(); // Skip unknown variable.
-		m_value = std::make_unique<value_type>(name, version, size);
+		m_value = std::make_unique<value_type>(STRING(name.data(), 4), version, size);
 		m_executed = true;
 		m_next = m_integerParser->next();
 		return m_value;
