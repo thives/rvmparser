@@ -1,5 +1,7 @@
-project(${USR_SOLUTION}_tests CXX)
+project(rvmparser_tests CXX)
 message("Project " ${PROJECT_NAME}:)
+
+#find_package(${USR_SOLUTION} REQUIRED CONFIG)
 
 ### Parse Integer
 add_executable(${PROJECT_NAME}_parse_integer
@@ -12,8 +14,8 @@ target_include_directories(${PROJECT_NAME}_parse_integer
 )
 
 target_link_libraries(${PROJECT_NAME}_parse_integer
-	PUBLIC
-		${USR_SOLUTION}
+	PRIVATE
+		rvmparser
 )
 
 target_compile_options(${PROJECT_NAME}_parse_integer
@@ -39,8 +41,8 @@ target_include_directories(${PROJECT_NAME}_parse_floating
 )
 
 target_link_libraries(${PROJECT_NAME}_parse_floating
-	PUBLIC
-		${USR_SOLUTION}
+	PRIVATE
+		rvmparser
 )
 
 target_compile_options(${PROJECT_NAME}_parse_floating
@@ -61,13 +63,13 @@ add_executable(${PROJECT_NAME}_parse_string
 )
 
 target_include_directories(${PROJECT_NAME}_parse_string
-	PUBLIC
+	PRIVATE
 		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/rvmparser/>
 )
 
 target_link_libraries(${PROJECT_NAME}_parse_string
 	PUBLIC
-		${USR_SOLUTION}
+		rvmparser
 )
 
 target_compile_options(${PROJECT_NAME}_parse_string
@@ -93,8 +95,8 @@ target_include_directories(${PROJECT_NAME}_parse_header
 )
 
 target_link_libraries(${PROJECT_NAME}_parse_header
-	PUBLIC
-		${USR_SOLUTION}
+	PRIVATE
+		rvmparser
 )
 
 target_compile_options(${PROJECT_NAME}_parse_header

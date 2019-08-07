@@ -1,11 +1,11 @@
-#ifndef RVMPARSER_DATA_DEFAULT_HEADER_H
-#define RVMPARSER_DATA_DEFAULT_HEADER_H
+#ifndef RVMPARSER_DEFAULT_DEFAULT_HEADER_H
+#define RVMPARSER_DEFAULT_DEFAULT_HEADER_H
 
 #include <string>
 
 namespace RvmParser
 {
-namespace Data
+namespace Default
 {
 namespace Rvm
 {

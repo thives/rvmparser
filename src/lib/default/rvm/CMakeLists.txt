@@ -1,25 +1,14 @@
-file(GLOB LOCALSOURCES
-    "*.cpp"
+add_library(DefaultRvmHeader OBJECT header.cpp)
+target_include_directories(DefaultRvmHeader
+	PUBLIC
+		$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/rvmparser>
+		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/rvmparser>
 )
-
-list(APPEND ${SOURCES} ${LOCALSOURCES} PARENT_SCOPE)
-
-add_library(DefaultRvmHeader header.h header.cpp)
-install(
-	TARGETS 
-		DefaultRvmHeader 
-	EXPORT
-		DefaultRvmTargets
-	LIBRARY DESTINATION lib
-	ARCHIVE DESTINATION lib
-	RUNTIME DESTINATION bin
-	INCLUDES DESTINATION include
+target_compile_options(DefaultRvmHeader
+	PRIVATE
+		-fconcepts
 )
-install(
-	EXPORT
-		DefaultRvmTargets
-	NAMESPACE
-		DefaultRvm::
-	DESTINATION
-		lib/cmake/DefaultRvm
+target_compile_features(DefaultRvmHeader
+	PRIVATE
+		cxx_std_20
 )

@@ -36,7 +36,7 @@ std::string to_string(const T& arg)
 	return arg.toString();
 }
 
-template<typename Func, typename TExpected> requires
+template<typename Func, typename TExpected>
 void test_assert(Func func, TExpected expected, const std::string& label = ""s)
 {
 	TExpected result = func();
