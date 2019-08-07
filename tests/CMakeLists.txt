@@ -11,6 +11,11 @@ target_include_directories(${PROJECT_NAME}_parse_integer
 		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/rvmparser/>
 )
 
+target_link_libraries(${PROJECT_NAME}_parse_integer
+	PUBLIC
+		${USR_SOLUTION}
+)
+
 target_compile_options(${PROJECT_NAME}_parse_integer
 	PRIVATE
 		-Werror
@@ -31,6 +36,11 @@ add_executable(${PROJECT_NAME}_parse_floating
 target_include_directories(${PROJECT_NAME}_parse_floating
 	PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/rvmparser/>
+)
+
+target_link_libraries(${PROJECT_NAME}_parse_floating
+	PUBLIC
+		${USR_SOLUTION}
 )
 
 target_compile_options(${PROJECT_NAME}_parse_floating
@@ -55,6 +65,11 @@ target_include_directories(${PROJECT_NAME}_parse_string
 		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/rvmparser/>
 )
 
+target_link_libraries(${PROJECT_NAME}_parse_string
+	PUBLIC
+		${USR_SOLUTION}
+)
+
 target_compile_options(${PROJECT_NAME}_parse_string
 	PRIVATE
 		-Werror
@@ -75,6 +90,11 @@ add_executable(${PROJECT_NAME}_parse_header
 target_include_directories(${PROJECT_NAME}_parse_header
 	PUBLIC
 		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/rvmparser/>
+)
+
+target_link_libraries(${PROJECT_NAME}_parse_header
+	PUBLIC
+		${USR_SOLUTION}
 )
 
 target_compile_options(${PROJECT_NAME}_parse_header

@@ -1,29 +1,25 @@
-project(${USR_SOLUTION} CXX)
-message("Project " ${PROJECT_NAME}:)
-
 file(GLOB LOCALSOURCES
     "*.cpp"
 )
 
+list(APPEND ${SOURCES} ${LOCALSOURCES} PARENT_SCOPE)
 
-
-add_executable(${PROJECT_NAME} ${SOURCES})
-
-target_link_libraries(${PROJECT_NAME} 
-	PUBLIC
-		${OPENBLAS_LIBS}
+add_library(DefaultRvmHeader header.h header.cpp)
+install(
+	TARGETS 
+		DefaultRvmHeader 
+	EXPORT
+		DefaultRvmTargets
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
+	RUNTIME DESTINATION bin
+	INCLUDES DESTINATION include
 )
-target_include_directories(${PROJECT_NAME}
-	PUBLIC
-		$<INSTALL_INTERFACE:/include>
-)
-target_compile_options(${PROJECT_NAME}
-	PRIVATE
-		-Werror
-#		-Wfatal-errors
-		-fconcepts
-)
-target_compile_features(${PROJECT_NAME}
-	PRIVATE
-		cxx_std_20
+install(
+	EXPORT
+		DefaultRvmTargets
+	NAMESPACE
+		DefaultRvm::
+	DESTINATION
+		lib/cmake/DefaultRvm
 )

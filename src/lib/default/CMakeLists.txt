@@ -1,1 +1,1 @@
-include_directories(rvm)
+add_subdirectory(rvm)
